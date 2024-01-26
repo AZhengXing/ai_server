@@ -82,15 +82,18 @@ void AIServer::load_ros_interfaces() {
 void AIServer::img_detection_service(
     const std::shared_ptr<IMGDetectionSrv::Request> req,
     std::shared_ptr<IMGDetectionSrv::Response> resp) {
-  RCLCPP_INFO(rclcpp::get_logger("AI_Server"), "get img");
+  RCLCPP_DEBUG(rclcpp::get_logger("AI_Server"), "get img");
+  resp->ts_start_detection = rclcpp::Clock().now().seconds();
   const auto &img = req->img;
   std::shared_ptr<DnnExampleOutput> dnn_output =
       std::make_shared<DnnExampleOutput>();
   auto fu = dnn_output->prom.get_future();
   RosImgProcess(img, dnn_output);
   auto ret = fu.get();
+  resp->ts_finish_detection = rclcpp::Clock().now().seconds();
   resp->goals = std::move(ret);
-  RCLCPP_INFO(rclcpp::get_logger("AI_Server"), "goals size: %d", resp->goals.size());
+  RCLCPP_DEBUG(rclcpp::get_logger("AI_Server"), "goals size: %d",
+               resp->goals.size());
 }
 
 void AIServer::RosImgProcess(const sensor_msgs::msg::Image &img,

@@ -82,7 +82,7 @@ private:
 
   struct AIModelConfig
   {
-    std::string model_config_file_path{"yolov5workconfig.json"};
+    std::string model_config_file_path{"/home/sunrise/xingzheng/ros_cv/install/ai_server/lib/ai_server/yolov5workconfig.json"};
     std::string model_file_path = "";
     std::string model_name = "";
     int model_input_w = 0;
